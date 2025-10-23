@@ -1,0 +1,13 @@
+{
+    "terminal.integrated.profiles.osx": {
+        "project env": {
+            "path": "bash",
+            "icon": "terminal-bash",
+            "args": [
+                "--rcfile",
+                "${workspaceFolder}/.vscode_support/bash_init.sh"
+            ]
+        }
+    },
+    "terminal.integrated.defaultProfile.osx": "project env"
+}
