@@ -7,3 +7,7 @@
 # Python cache files
 __pycache__
 **/__pycache__
+
+# User input/output data
+input_song_folders/
+output_song_folders/
