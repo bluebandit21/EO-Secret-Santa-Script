@@ -44,11 +44,14 @@ def handle_song(giftee, gifter, song):
     
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: `./main.py path_to_spreadsheet.csv")
+    if len(sys.argv) > 2:
+        print("Usage: `./main.py [path_to_spreadsheet.csv]")
         sys.exit(1)
+    if len(sys.argv) == 2:
+        csv_path = sys.argv[1]
+    else:
+        csv_path = input("CSV Path: ")
     
-    csv_path = sys.argv[1]
     with open(csv_path, newline='') as csvfile:
         secret_santa_info = csv.DictReader(csvfile, delimiter=',')
         for row in secret_santa_info:
