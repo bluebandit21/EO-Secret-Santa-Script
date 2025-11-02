@@ -11,19 +11,24 @@ SONG_FIELD = "Song Name"
 INPUT_SONG_FOLDER_PATH = "input_song_folders"
 OUTPUT_SONG_FOLDER_PATH = "output_song_folders"
 
-
-def handle_song(giftee, gifter, song):
+def verify_song(_1, _2, song) -> bool:
     in_path = Path(INPUT_SONG_FOLDER_PATH)/song
     if not in_path.is_dir():
-        print(f"ERROR: Source directory for song {song} not present or misnamed\nSkipping...\n")
-        return
+        print(f"ERROR: Source directory for song {song} not present or misnamed")
+        return False
     files = os.listdir(in_path)
     # Expect directory to have two files only, exactly one of which is a .sm/.ssc file
     if not (len(files) == 2 and sum((".sm" in filename or ".ssc" in filename) for filename in files) == 1):
-        print(f"ERROR: Source directory for song {song} does not include exactly one .sm/.ssc file!\nSkipping...\n")
-        return
+        print(f"ERROR: Source directory for song {song} does not include exactly one .sm/.ssc file!")
+        return False
     # TODO: Other sanity checks here? Perhaps whether there's a song-like file present, etc
+    return True
 
+
+def handle_song(giftee, gifter, song):
+    # Note: Sanity check verification already done for all songs before this method called on any song
+    in_path = Path(INPUT_SONG_FOLDER_PATH)/song
+    files = os.listdir(in_path)
     out_path = Path(OUTPUT_SONG_FOLDER_PATH)/f"to {giftee} - {song} ({gifter})"
     shutil.copytree(src=in_path, dst=out_path)
 
@@ -52,16 +57,23 @@ def main():
     else:
         csv_path = input("CSV Path: ")
     
+    to_handle = []
     with open(csv_path, newline='') as csvfile:
         secret_santa_info = csv.DictReader(csvfile, delimiter=',')
         for row in secret_santa_info:
             if row.get(REQUESTER_FIELD) is None or row.get(ASSIGNED_FIELD) is None or row.get(SONG_FIELD) is None:
                 print(f"ERROR: {row}")
                 continue
-            handle_song(row.get(REQUESTER_FIELD), row.get(ASSIGNED_FIELD), row.get(SONG_FIELD))
+            to_handle.append((row.get(REQUESTER_FIELD), row.get(ASSIGNED_FIELD), row.get(SONG_FIELD)))
+    
+    all_songs_good = True
+    for song in to_handle:
+        all_songs_good = all_songs_good and verify_song(*song)
+    if not all_songs_good:
+        print("ERROR: Some songs failed sanity check, see above for details.\nAborting.")
+        exit(1)
+    for song in to_handle:
+        handle_song(*song)
             
-                
-
-
 if __name__ == "__main__":
     main()
