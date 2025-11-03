@@ -68,7 +68,7 @@ def main():
     
     all_songs_good = True
     for song in to_handle:
-        all_songs_good = all_songs_good and verify_song(*song)
+        if not verify_song(*song): all_songs_good = False
     if not all_songs_good:
         print("ERROR: Some songs failed sanity check, see above for details.\nAborting.")
         exit(1)
