@@ -26,6 +26,7 @@ def verify_song(_1, _2, song) -> bool:
 
 
 def handle_song(giftee, gifter, song):
+    print(f"Handling song {song}")
     # Note: Sanity check verification already done for all songs before this method called on any song
     in_path = Path(INPUT_SONG_FOLDER_PATH)/song
     files = os.listdir(in_path)
