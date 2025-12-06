@@ -17,8 +17,8 @@ def verify_song(_1, _2, song) -> bool:
         print(f"ERROR: Source directory for song {song} not present or misnamed")
         return False
     files = os.listdir(in_path)
-    # Expect directory to have two files only, exactly one of which is a .sm/.ssc file
-    if not (len(files) == 2 and sum((".sm" in filename or ".ssc" in filename) for filename in files) == 1):
+    # Expect directory to have exactly one of .sm/.ssc file
+    if not (sum((".sm" in filename or ".ssc" in filename) for filename in files) == 1):
         print(f"ERROR: Source directory for song {song} does not include exactly one .sm/.ssc file!")
         return False
     # TODO: Other sanity checks here? Perhaps whether there's a song-like file present, etc
